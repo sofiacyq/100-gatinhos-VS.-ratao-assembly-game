@@ -1,8 +1,16 @@
 jmp main
 
 posMenina: var #1
-posAntMenina: var #1
-    
+
+posGato: var #3
+    static posGato + #0, #840   ; Gato 0 começa na coluna 0 (Verde)
+    static posGato + #1, #850   ; Gato 1 começa na coluna 10 (Amarelo)
+    static posGato + #2, #860   ; Gato 2 começa na coluna 20 (Vermelho)
+
+corGato: var #3
+    static corGato + #0, #58112 ; Verde (Baseado na sua tabela)
+    static corGato + #1, #768   ; Amarelo
+    static corGato + #2, #7936  ; Vermelho
     
 main:
 	loadn r1, #tela1Linha0	    ;Endereco onde comeca a primeira linha do cenario
@@ -34,6 +42,21 @@ main:
         store posMenina, r0         ;Personagem começa na linha 27, coluna 39
         call DesenhaMenina
 
+		LoopGatos:
+    	; Loop para atualizar os 3 gatos (0, 1 e 2)
+    	loadn r0, #0        ; r0 será o nosso índice do gato atual (começa no Gato 0)
+    
+		LoopAtualizaGatos:
+    	call MoveGatoId     ; Move o gato que está no índice r0
+    	inc r0              ; Avança para o próximo gato
+    	loadn r1, #3        ; Limite de gatos
+    	cmp r0, r1
+    	jne LoopAtualizaGatos
+
+    	call Delay          ; Controla a velocidade da animação
+    	jmp LoopGatos
+
+
         loadn r0, #0	
         loadn r2, #0	
 		
@@ -53,15 +76,98 @@ DesenhaMenina:
     add r1, r1, r2             
 
     outchar r1, r0
-
-    store posAntMenina, r0
     
     pop r2
     pop r1
     pop r0
     rts
+       
+;--------------------------------------------
+;     Sub-rotina: Move Gato
+;--------------------------------------------
+; Parâmetro: r0 = Índice do gato (0, 1 ou 2)
+;--------------------------------------------
+MoveGatoId:
+    push r1
+    push r2
+    push r3
+    push r4
+    push r5
+    push r6
+
+    ; 1. Calcular os endereços na memória baseados no ID (r0)
+    loadn r1, #posGato
+    add r1, r1, r0      ; r1 = endereço de posGato[ID]
+    loadi r2, r1        ; r2 = valor da posição atual do gato (ex: 845)
+
+    loadn r3, #corGato
+    add r3, r3, r0      ; r3 = endereço de corGato[ID]
+    loadi r4, r3        ; r4 = valor da cor do gato
+
+    ; ==========================================================
+    ; 2. RECUPERAR O CENÁRIO ORIGINAL (Em vez de apagar com ' ')
+    ; ==========================================================
+    ; r2 guarda a posição absoluta da tela (ex: 840 a 879)
+    ; A linha 21 começa em 840. Queremos saber o deslocamento (coluna) dentro da linha:
+    loadn r5, #840
+    sub r5, r2, r5      ; r5 = r2 - 840 (Descobre a coluna exata de 0 a 39)
+
+    ; Agora apontamos para a string correspondente à linha 21 na memória
+    loadn r6, #tela2Linha21 ; Endereço base da linha 21 do seu cenário
+    add r6, r6, r5      ; Soma a coluna para achar o caractere exato na memória
+    loadi r5, r6        ; r5 = Caractere original do cenário (ex: '.', '-', ' ', etc.)
+
+    ; Redesenha o cenário de fundo na posição que o gato está abandonando
+    ; (Se o seu cenário original tiver cor, você pode somar a cor do cenário aqui em r5)
+    outchar r5, r2      
+
+    ; ==========================================================
+    ; 3. Calcular a nova posição do gato
+    ; ==========================================================
+    inc r2              ; Anda 1 bloco para a direita
+
+    ; 4. Verificar limite da linha 21 (Fim é 880)
+    loadn r5, #880
+    cmp r2, r5
+    jne SalvaNovaPos
     
-   
+    loadn r2, #840      ; Se passou do fim, volta para o começo da linha
+
+SalvaNovaPos:
+    storei r1, r2       ; Atualiza a nova posição na memória (posGato[ID] = r2)
+
+    ; 5. Desenhar o gato na nova posição com sua respectiva cor
+    loadn r5, #'a'      ; Caractere do gato
+    add r5, r5, r4      ; Soma o caractere 'a' com a cor correspondente
+    outchar r5, r2      ; Plota o gatinho na tela!
+
+    pop r6
+    pop r5
+    pop r4
+    pop r3
+    pop r2
+    pop r1
+    rts
+
+;--------------------------------------------
+;             Sub-rotina: Delay
+;--------------------------------------------
+Delay:
+    push r0
+    push r1
+    loadn r0, #50      ; Ajuste aqui para controlar a velocidade dos 3 juntos
+Delay_Loop1:
+    loadn r1, #1000
+Delay_Loop2:
+    dec r1
+    jnz Delay_Loop2
+    dec r0
+    jnz Delay_Loop1
+    pop r1
+    pop r0
+    rts
+
+
 ;--------------------------------------------
 ;             Imprime Tela
 ;--------------------------------------------
