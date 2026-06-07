@@ -8,7 +8,7 @@ posGato: var #3
     static posGato + #2, #860   ; Gato 2 começa na coluna 20 (Vermelho)
 
 corGato: var #3
-    static corGato + #0, #58112 ; Verde (Baseado na sua tabela)
+    static corGato + #0, #512   ; Amarelo manteiga
     static corGato + #1, #768   ; Amarelo
     static corGato + #2, #7936  ; Vermelho
     
@@ -31,7 +31,7 @@ main:
 	Restart:
         call ApagaTela
         loadn R1, #tela2Linha0	    ;Endereco onde comeca a primeira linha do cenario!!
-        loadn R2, #512  			;cor verde -> grama
+        loadn R2, #58112  			;cor verde -> grama
         call ImprimeTela2   		;Rotina de Impresao de Cenario na Tela Inteira
         
         loadn R1, #tela3Linha0	    ;Endereco onde comeca a primeira linha do cenario!!
@@ -83,7 +83,7 @@ DesenhaMenina:
     rts
        
 ;--------------------------------------------
-;     Sub-rotina: Move Gato
+;                 Move Gato
 ;--------------------------------------------
 ; Parâmetro: r0 = Índice do gato (0, 1 ou 2)
 ;--------------------------------------------
@@ -104,22 +104,18 @@ MoveGatoId:
     add r3, r3, r0      ; r3 = endereço de corGato[ID]
     loadi r4, r3        ; r4 = valor da cor do gato
 
-    ; ==========================================================
-    ; 2. RECUPERAR O CENÁRIO ORIGINAL (Em vez de apagar com ' ')
-    ; ==========================================================
     ; r2 guarda a posição absoluta da tela (ex: 840 a 879)
     ; A linha 21 começa em 840. Queremos saber o deslocamento (coluna) dentro da linha:
     loadn r5, #840
     sub r5, r2, r5      ; r5 = r2 - 840 (Descobre a coluna exata de 0 a 39)
 
-    ; Agora apontamos para a string correspondente à linha 21 na memória
-    loadn r6, #tela2Linha21 ; Endereço base da linha 21 do seu cenário
-    add r6, r6, r5      ; Soma a coluna para achar o caractere exato na memória
-    loadi r5, r6        ; r5 = Caractere original do cenário (ex: '.', '-', ' ', etc.)
+    loadn r6, #tela2Linha21
+    add r6, r6, r5      
+    loadi r5, r6        
 
-    ; Redesenha o cenário de fundo na posição que o gato está abandonando
-    ; (Se o seu cenário original tiver cor, você pode somar a cor do cenário aqui em r5)
-    outchar r5, r2      
+    loadn r6, #58112  
+    add r5, r5, r6      
+    outchar r5, r2
 
     ; ==========================================================
     ; 3. Calcular a nova posição do gato
@@ -155,7 +151,7 @@ SalvaNovaPos:
 Delay:
     push r0
     push r1
-    loadn r0, #50      ; Ajuste aqui para controlar a velocidade dos 3 juntos
+    loadn r0, #30      ; Ajuste aqui para controlar a velocidade dos 3 juntos
 Delay_Loop1:
     loadn r1, #1000
 Delay_Loop2:
