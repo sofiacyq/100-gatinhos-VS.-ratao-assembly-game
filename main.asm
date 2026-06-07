@@ -3,7 +3,7 @@ jmp main
 posMenina: var #1
 
 posGato: var #3
-    static posGato + #0, #840   ; Gato 0 começa na coluna 0 (Verde)
+    static posGato + #0, #840   ; Gato 0 começa na coluna 0 (Amarelo manteiga)
     static posGato + #1, #850   ; Gato 1 começa na coluna 10 (Amarelo)
     static posGato + #2, #860   ; Gato 2 começa na coluna 20 (Vermelho)
 
