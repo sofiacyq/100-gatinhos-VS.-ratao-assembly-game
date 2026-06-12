@@ -72,7 +72,7 @@ DesenhaMenina:
 
     load r0, posMenina
     loadn r2, #3328             ;cor rosa
-    loadn r1, ':'               
+    loadn r1, #':'               
     add r1, r1, r2             
 
     outchar r1, r0
