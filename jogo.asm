@@ -11,6 +11,17 @@ corGato: var #3
     static corGato + #0, #512   ; Amarelo manteiga
     static corGato + #1, #768   ; Amarelo
     static corGato + #2, #7936  ; Vermelho
+
+contadorGatos: var #1
+    static contadorGatos, #0
+
+contadorTempo: var #1
+    static contadorTempo, #0
+
+flagGatoProximo: var #1
+    static flagGatoProximo, #0
+
+
     
 main:
 	loadn r1, #tela1Linha0	    ;Endereco onde comeca a primeira linha do cenario
@@ -335,7 +346,57 @@ ImprimeStr2:
 	pop r1
 	pop r0
 	rts
-	
+
+;--------------------------------------------
+;     VerificaProximidade
+;     Só considera gato que está 1 posição à
+;     ESQUERDA da menina (vindo na direção dela)
+;--------------------------------------------
+VerificaProximidade:
+    push r0
+    push r1
+    push r2
+    push r3
+    push r4
+
+    load r1, posMenina      ;posição da menina
+    dec r1                   ;posição imediatamente à esquerda da menina
+
+    loadn r0, #0
+    loadn r4, #0
+    store flagGatoProximo, r4
+
+    LoopVerificaGato:
+        loadn r2, #posGato
+        add r2, r2, r0
+        loadi r3, r2          ;posição do gato r0
+
+        ;Verifica se o gato está exatamente na posição (posMenina - 1)
+        cmp r3, r1
+        ceq MarcaGatoProximo
+
+        jmp ProximoGatoVerif
+
+        MarcaGatoProximo:
+            loadn r4, #1
+            store flagGatoProximo, r4
+            loadn r4, #gatoProximoId
+            storei r4, r0
+
+        ProximoGatoVerif:
+            inc r0
+            loadn r4, #3
+            cmp r0, r4
+            jne LoopVerificaGato
+
+    pop r4
+    pop r3
+    pop r2
+    pop r1
+    pop r0
+    rts
+
+
 	
 
 ;--------------------------------------------
