@@ -434,7 +434,7 @@ tela0Linha27 : string "                                        "
 tela0Linha28 : string "                                        "
 tela0Linha29 : string "                                        "	
 
-;Tela 01: 100 gatinhos vs. ratão
+;Tela 01: gatinho vs. ratão
 tela1Linha0  : string "                                        "
 tela1Linha1  : string "                                        "
 tela1Linha2  : string "                                        "
