@@ -31,10 +31,10 @@
   	a ___________________________ :
 
 ## Sistema de Movimentação:
-O gatinho se move automaticamente para a direita.
-A cada ciclo do jogo: posição = posição + 1
-Isso cria a sensação de caminhada contínua.
-O jogador controla apenas a altura do personagem.
+    O gatinho se move automaticamente para a direita.
+    A cada ciclo do jogo: posição = posição + 1
+    Isso cria a sensação de caminhada contínua.
+    O jogador controla apenas a altura do personagem.
 
 ###	Subir
   Ao pressionar uma tecla definida (por exemplo, a):
