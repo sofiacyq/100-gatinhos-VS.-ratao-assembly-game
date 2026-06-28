@@ -1,0 +1,33 @@
+; ============================================================
+;  Sub-rotina: pow
+;  Entrada:  R0 = base, R1 = expoente (inteiro >= 0)
+;  Saída:    R0 = resultado (base ^ expoente)
+;  Usa:      R2 (acumulador), R3 (zero para CMP)
+;  Chamada:  CALL pow
+; ============================================================
+
+pow:
+    LOADN R2, 1          ; R2 = 1  (acumulador resultado)
+    LOADN R3, 0          ; R3 = 0  (constante para comparar com R1)
+
+pow_loop:
+    CMP   R1, R3         ; compara R1 com 0
+    JMP   EQUAL pow_end  ; se R1 == 0, acabou
+
+    MUL   R2, R2, R0     ; R2 = R2 * R0  (acumula base)
+    DEC   R1             ; R1--  (decrementa expoente)
+    JMP   pow_loop       ; volta ao topo
+
+pow_end:
+    MOV   R0, R2         ; R0 = resultado (convenção de retorno)
+    RTS                  ; retorna ao chamador
+
+; ============================================================
+;  EXEMPLO 
+;
+; Calcula 3^4 = 81
+; LOADN R0, 3    ; base = 3
+; LOADN R1, 4    ; expoente = 4
+; CALL  pow      ; chama a sub-rotina
+; Aqui R0 == 81
+; ============================================================
