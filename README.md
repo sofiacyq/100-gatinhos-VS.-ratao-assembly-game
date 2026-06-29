@@ -1,7 +1,7 @@
 # Gatinho Vs. Ratão
 
   O jogo "Gatinho Vs. Ratão" foi desenvolvido na linguagem de programação Assembly, projetado para o processador ICMC. A versão disponível foi projetada na IDE do site: https://proc.giroto.dev.
-  O projeto possui vídeo explicativo disponível no link:.
+  O projeto possui vídeo explicativo disponível no link:https://youtu.be/WWXOfultN94 .
   Para um bom desempenho visual, é recomendado que se utilize o charmap modificado, disponível para download no repositório.
 
 ## Objetivo do jogo:
